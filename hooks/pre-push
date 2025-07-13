@@ -13,12 +13,15 @@ fi
 
 # Format check
 echo "🧼 Checking code formatting..."
-UNFORMATTED_FILES=$(flutter format --set-exit-if-changed .)
-if [[ $? -ne 0 ]]; then
+FORMAT_OUTPUT=$(dart format --set-exit-if-changed . 2>&1)
+EXIT_CODE=$?
+
+if [[ $EXIT_CODE -ne 0 ]]; then
     echo "❌ Code formatting issues found:"
-    echo "$UNFORMATTED_FILES"
+    echo "$FORMAT_OUTPUT"
     exit 1
 fi
+
 
 # Lint check (if needed separately)
 # echo "🔎 Running dart lint..."

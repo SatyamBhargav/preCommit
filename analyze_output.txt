@@ -1,2 +1,4 @@
 Analyzing precommit...                                          
-No issues found! (ran in 1.4s)
+
+   info • Don't invoke 'print' in production code • lib/main.dart:72:5 • avoid_print
+

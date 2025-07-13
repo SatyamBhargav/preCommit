@@ -1,0 +1,45 @@
+#!/bin/bash
+
+echo "🔍 Running pre-push checks..."
+
+# Analyze code
+echo "🔍 Analyzing code..."
+flutter analyze > analyze_output.txt
+if [ $? -ne 0 ]; then
+    echo "❌ Flutter analyze failed:"
+    cat analyze_output.txt
+    exit 1
+fi
+
+# Format check
+echo "🧼 Checking code formatting..."
+UNFORMATTED_FILES=$(flutter format --set-exit-if-changed .)
+if [[ $? -ne 0 ]]; then
+    echo "❌ Code formatting issues found:"
+    echo "$UNFORMATTED_FILES"
+    exit 1
+fi
+
+# Lint check (if needed separately)
+# echo "🔎 Running dart lint..."
+# dart run lint  # optional if flutter analyze covers it
+
+# Optional: Block print/debugPrint in lib/
+echo "🕵️ Checking for debug prints..."
+PRINT_USAGE=$(grep -rnw "lib/" -e "print" -e "debugPrint" | grep -v "// allow")
+if [[ ! -z "$PRINT_USAGE" ]]; then
+    echo "❌ print/debugPrint found in code:"
+    echo "$PRINT_USAGE"
+    exit 1
+fi
+
+echo "🧪 Running tests..."
+flutter test
+if [ $? -ne 0 ]; then
+    echo "❌ Tests failed!"
+    exit 1
+fi
+
+
+echo "✅ All checks passed. Proceeding with push."
+exit 0

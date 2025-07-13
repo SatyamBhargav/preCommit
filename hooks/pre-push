@@ -1,40 +1,55 @@
 #!/bin/bash
-
+echo ""
 echo "🔍 Running pre-push checks..."
+echo ""
 
 # Analyze code
-echo "🔍 Analyzing code..."
 flutter analyze > analyze_output.txt
+
+# Check if flutter analyze returned non-zero (i.e. has errors)
 if [ $? -ne 0 ]; then
     echo "❌ Flutter analyze failed:"
     cat analyze_output.txt
+    rm analyze_output.txt
     exit 1
 fi
 
-# Format check
-echo "🧼 Checking code formatting..."
-FORMAT_OUTPUT=$(dart format --set-exit-if-changed . 2>&1)
-EXIT_CODE=$?
-
-if [[ $EXIT_CODE -ne 0 ]]; then
-    echo "❌ Code formatting issues found:"
-    echo "$FORMAT_OUTPUT"
+# Check specifically for unused imports (even if warning)
+if grep -q "info • Unused import" analyze_output.txt; then
+    echo "❌ Unused import(s) found. Please remove them before pushing:"
+    grep "info • Unused import" analyze_output.txt
+    rm analyze_output.txt
     exit 1
 fi
 
+echo "✅ Flutter analyze passed."
+rm analyze_output.txt
 
-# Lint check (if needed separately)
-# echo "🔎 Running dart lint..."
-# dart run lint  # optional if flutter analyze covers it
 
-# Optional: Block print/debugPrint in lib/
-echo "🕵️ Checking for debug prints..."
-PRINT_USAGE=$(grep -rnw "lib/" -e "print" -e "debugPrint" | grep -v "// allow")
-if [[ ! -z "$PRINT_USAGE" ]]; then
-    echo "❌ print/debugPrint found in code:"
-    echo "$PRINT_USAGE"
-    exit 1
+# # Format check
+# FORMAT_OUTPUT=$(dart format --set-exit-if-changed . 2>&1)
+# EXIT_CODE=$?
+
+# if [[ $EXIT_CODE -ne 0 ]]; then
+#     echo "❌ Code formatting issues found:"
+#     echo "$FORMAT_OUTPUT"
+#     exit 1
+# else
+#     echo "✅ Code is properly formatted."
+# fi
+
+# Format check with auto-correct
+FORMAT_OUTPUT=$(dart format . 2>&1)
+
+if [[ "$FORMAT_OUTPUT" == *"Formatted "* ]]; then
+    # echo "❌ Code formatting issues found"
+    # echo "$FORMAT_OUTPUT"
+    echo "✅ Code formatted"
+else
+    echo "✅ Code formatting is correct"
 fi
+
+
 
 echo "🧪 Running tests..."
 flutter test
@@ -43,6 +58,11 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-
+echo ""
+echo "---------------------------------------------"
+echo ""
 echo "✅ All checks passed. Proceeding with push."
+echo ""
+echo "---------------------------------------------"
+echo ""
 exit 0

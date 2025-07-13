@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:precommit/hello.dart';
+// import 'package:precommit/hello.dart';
 
 void main() {
   runApp(const MyApp());
@@ -69,54 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    if (kDebugMode) {
-    print('Counter incremented to $_counter');
-
-    }
+    if (kDebugMode) {}
   }
 
   @override

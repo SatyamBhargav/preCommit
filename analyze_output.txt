@@ -1,4 +1,0 @@
-Analyzing precommit...                                          
-
-   info • Don't invoke 'print' in production code • lib/main.dart:116:5 • avoid_print
-

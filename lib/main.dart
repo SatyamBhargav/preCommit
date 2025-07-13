@@ -56,33 +56,6 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
@@ -95,9 +68,9 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
-    if (kDebugMode) {
-      print('Counter incremented to $_counter');
-    }
+
+    print('Counter incremented to $_counter');
+    if (kDebugMode) {}
   }
 
   @override

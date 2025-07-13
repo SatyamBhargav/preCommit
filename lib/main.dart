@@ -113,8 +113,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
+    if (kDebugMode) {
     print('Counter incremented to $_counter');
-    if (kDebugMode) {}
+
+    }
   }
 
   @override
